@@ -62,7 +62,7 @@ def loop():
     #2. socket状态变化以后的回调是由程序员来完成的
     while not stop:
         ready = selector.select()
-        for key, mask in ready:
+        for key, _ in ready:
             call_back = key.data
             call_back(key)
 
