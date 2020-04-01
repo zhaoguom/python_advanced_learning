@@ -5,7 +5,9 @@
 3. yield from 表达式的值，是子生成器终止时，传递给StopIteration异常的第一个参数；
 4. 如果调用的时候出现StopIteration异常，委托生成器会恢复运行，同时其他的异常会向上抛出；
 5. 传入委托生成器的异常里，除了GeneratorExit之外，其他的所有异常全部传递给子生成器的throw()方法，如果调用.throw()的时候出现了StopIteration异常，
-那么就恢复委托生成器的运行，
+那么就恢复委托生成器的运行，其他的异常全部向上抛出；
+6. 如果在委托生成器上调用.close()或者传入GeneratorExit异常，会调用子生成器的.close()方法，没有的话就不调用。如果在close的时候抛出了异常，向上抛出，
+否则的话委托生成器会抛出GeneratorExit异常。
 '''
 
 final_result = {}

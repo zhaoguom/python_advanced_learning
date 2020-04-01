@@ -1,6 +1,10 @@
-import socket
+from concurrent.futures import ThreadPoolExecutor
+import asyncio
 from urllib.parse import urlparse
+import socket
 import time
+
+executor = ThreadPoolExecutor(3)
 
 def get_url(url):
     #通过socket请求html
@@ -28,9 +32,12 @@ def get_url(url):
     client.close()
 
 if __name__ == "__main__":
+    loop=asyncio.get_event_loop()
     start_time = time.time()
+    tasks = []
     for url in range(50):
         url = "http://shop.projectsedu.com/goods/{}/".format(url)
-        get_url(url)
-    
-    print("elapsed time: {}".format(time.time()-start_time))
+        task = loop.run_in_executor(executor, get_url, url)
+        tasks.append(task)
+    loop.run_until_complete(asyncio.wait(tasks))
+    print("time elapsed {}".format(time.time()-start_time))
