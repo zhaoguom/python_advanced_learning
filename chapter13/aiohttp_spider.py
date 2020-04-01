@@ -9,11 +9,14 @@ waiting_urls = []
 seen_urls = set()
 stopping = False
 
+sem = asyncio.Semaphore(3)
+
 async def fetch(url, session):
-    async with session.get(url) as response:
-        data = await response.text()
-        print(data)
-        return data
+    async with sem:
+        async with session.get(url) as response:
+            data = await response.text()
+            print(data)
+            return data
 
 async def article_handler(url, session, pool):
     html = await fetch(url, session)
@@ -61,7 +64,7 @@ async def consumer(pool):
 
             url = waiting_urls.pop()
             print("start get url: {}".format(url))
-            if re.match('/licai/yh/\d+', url):
+            if (re.match(r'/licai/yh/\d+', url)):
                 url = "http://jobbole.com" + url
                 if url not in seen_urls:
                     asyncio.ensure_future(article_handler(url, session, pool))
