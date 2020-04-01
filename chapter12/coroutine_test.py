@@ -22,7 +22,7 @@ def gen_func():
 
 if __name__ == "__main__":
     gen = gen_func()
-    url = next(gen)
+    url = gen.send(None) # or url = next(gen)
     html = "zhaoguom"
     # 启动生成器的方式有2中，next(), send()
     # send()方法可以传递值进入生成器内部，同时还可以重启生成器执行到下一个yield
