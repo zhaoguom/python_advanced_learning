@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from numbers import Integral
 
-#数据描述符
+#属性描述符
 class IntField:
     def __get__(self, instance, owner):
         return self.value
